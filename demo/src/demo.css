@@ -1,12 +1,72 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,800');
 
-  html, body, #demo {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-  }
-  #demo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f3f3f3;
-  }
+html,
+body,
+#demo {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  font-family: Montserrat, 'sans-serif';
+}
+#demo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f3f3;
+}
+.calendar-container {
+  display: flex;
+}
+.details {
+  display: flex;
+  background: white;
+}
+
+.date {
+  padding: 10px 15px 40px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  opacity: 0.7;
+  color: blueviolet;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.event-list,
+.description-list {
+  padding: 10px 0 40px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.event-list > h5,
+.description-list > h5 {
+  margin: 0 0 15px;
+  font-weight: bold;
+  opacity: 0.7;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+  text-align: center;
+  color: blueviolet;
+}
+
+.description {
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 10px 15px;
+}
+
+.description > h4 {
+  margin: 0 0 10px;
+  color: pink;
+  font-style: italic;
+}
+
+.description > p {
+  margin: 2px 0;
+}
+
+.event {
+  padding: 15px 30px;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
