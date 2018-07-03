@@ -1,7 +1,8 @@
-import React, {PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 import classNames from 'classnames';
-import {getDateString} from '../utils';
+import { getDateString } from '../utils';
 import format from 'date-fns/format';
+import parse from 'date-fns/parse';
 import getDay from 'date-fns/get_day';
 import isSameYear from 'date-fns/is_same_year';
 import styles from './Month.scss';
@@ -12,6 +13,8 @@ export default class Month extends PureComponent {
       DayComponent,
       disabledDates,
       disabledDays,
+      events,
+      eventToggled,
       monthDate,
       locale,
       maxDate,
@@ -26,7 +29,7 @@ export default class Month extends PureComponent {
     const currentYear = today.getFullYear();
     const year = monthDate.getFullYear();
     const month = monthDate.getMonth();
-    const monthShort = format(monthDate, 'MMM', {locale: locale.locale});
+    const monthShort = format(monthDate, 'MMM', { locale: locale.locale });
     const monthRows = [];
     let day = 0;
     let isDisabled = false;
@@ -38,7 +41,7 @@ export default class Month extends PureComponent {
     const _minDate = format(minDate, 'YYYY-MM-DD');
     const _maxDate = format(maxDate, 'YYYY-MM-DD');
 
-		// Oh the things we do in the name of performance...
+    // Oh the things we do in the name of performance...
     for (let i = 0, len = rows.length; i < len; i++) {
       row = rows[i];
       days = [];
@@ -48,72 +51,105 @@ export default class Month extends PureComponent {
         day = row[k];
 
         date = getDateString(year, month, day);
-        isToday = (date === _today);
+        isToday = date === _today;
 
-        isDisabled = (
-					minDate && date < _minDate ||
-					maxDate && date > _maxDate ||
-					disabledDays && disabledDays.length && disabledDays.indexOf(dow) !== -1 ||
-					disabledDates && disabledDates.length && disabledDates.indexOf(date) !== -1
-				);
+        isDisabled =
+          (minDate && date < _minDate) ||
+          (maxDate && date > _maxDate) ||
+          (disabledDays &&
+            disabledDays.length &&
+            disabledDays.indexOf(dow) !== -1) ||
+          (disabledDates &&
+            disabledDates.length &&
+            disabledDates.indexOf(date) !== -1);
+        const dateEvents = events ? this.getEvents(events, date) : [];
 
         days[k] = (
-					<DayComponent
-						key={`day-${day}`}
-						currentYear={currentYear}
-						date={date}
-						day={day}
+          <DayComponent
+            key={`day-${day}`}
+            currentYear={currentYear}
+            date={date}
+            day={day}
+            events={dateEvents}
+            eventToggled={eventToggled}
             selected={selected}
-						isDisabled={isDisabled}
-						isToday={isToday}
-						locale={locale}
+            isDisabled={isDisabled}
+            isToday={isToday}
+            locale={locale}
             month={month}
             monthShort={monthShort}
-						theme={theme}
+            theme={theme}
             year={year}
             {...passThrough.Day}
-					/>
-				);
+          />
+        );
 
         dow += 1;
       }
       monthRows[i] = (
         <ul
           key={`Row-${i}`}
-          className={classNames(styles.row, {[styles.partial]: row.length !== 7})}
-          style={{height: rowHeight}}
+          className={classNames(styles.row, {
+            [styles.partial]: row.length !== 7,
+          })}
+          style={{ height: rowHeight }}
           role="row"
           aria-label={`Week ${i + 1}`}
         >
           {days}
         </ul>
       );
-
     }
 
     return monthRows;
   }
 
+  getEvents(events, date) {
+    // console.log(events);
+    if (events) {
+      if (events && events.length) {
+        const filtered = events.filter((event) => {
+          return format(parse(event.date), 'YYYY-MM-DD') === date;
+        });
+        return filtered;
+      } else {
+        return [];
+      }
+    }
+  }
+
   render() {
-    const {locale: {locale}, monthDate, today, rows, rowHeight, showOverlay, style, theme} = this.props;
+    const {
+      locale: { locale },
+      monthDate,
+      today,
+      rows,
+      rowHeight,
+      showOverlay,
+      style,
+      theme,
+    } = this.props;
     const dateFormat = isSameYear(monthDate, today) ? 'MMMM' : 'MMMM YYYY';
 
     return (
-      <div className={styles.root} style={{...style, lineHeight: `${rowHeight}px`}}>
-  				<div className={styles.rows}>
-  					{this.renderRows()}
-  					{showOverlay &&
-  						<label
-                className={classNames(styles.label, {
-                  [styles.partialFirstRow]: rows[0].length !== 7,
-                })}
-                style={{backgroundColor: theme.overlayColor}}
-              >
-                <span>{format(monthDate, dateFormat, {locale})}</span>
-              </label>
-  					}
-  				</div>
-  			</div>
+      <div
+        className={styles.root}
+        style={{ ...style, lineHeight: `${rowHeight}px` }}
+      >
+        <div className={styles.rows}>
+          {this.renderRows()}
+          {showOverlay && (
+            <label
+              className={classNames(styles.label, {
+                [styles.partialFirstRow]: rows[0].length !== 7,
+              })}
+              style={{ backgroundColor: theme.overlayColor }}
+            >
+              <span>{format(monthDate, dateFormat, { locale })}</span>
+            </label>
+          )}
+        </div>
+      </div>
     );
   }
 }
