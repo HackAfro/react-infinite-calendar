@@ -50,7 +50,14 @@ export default class Day extends PureComponent {
 
   getBackgroundColor(events) {
     const unToggledEvents = events.filter((event) => !event.toggled);
-    const color = unToggledEvents.length ? '#e3385a' : 'rgb(85, 159, 255)';
+    const toggledEvents = events.filter((event) => event.toggled);
+    // since I couldn't achieve half colors, I chose another color to achieve that goal
+    const color =
+      unToggledEvents.length === events.length
+        ? 'rgb(85, 159, 255)'
+        : toggledEvents.length === events.length
+          ? '#e3385a'
+          : 'purple';
     return color;
   }
 

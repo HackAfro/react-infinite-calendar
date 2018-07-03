@@ -13,6 +13,12 @@ const events = [
     toggled: false,
   },
   {
+    title: 'MAX trip',
+    date: '2018-07-08T07:00:00.000Z',
+    description: 'Get MAX trip for champion that came to the market early',
+    toggled: true,
+  },
+  {
     title: 'Call Bisi',
     date: '2018-07-23T07:00:00.000Z',
     description: 'Call Bisi to get food from the market',
@@ -29,6 +35,13 @@ const events = [
     date: '2018-07-02T07:00:00.000Z',
     description:
       'Check the items needed from the fridge and get it from Shoprite',
+    toggled: true,
+  },
+  {
+    title: 'Restock the car',
+    date: '2018-07-02T07:00:00.000Z',
+    description:
+      'Check the items needed from the car and get it from the mechanic',
     toggled: true,
   },
   {
